@@ -28,6 +28,7 @@ def scheduled_events_by_venue(venue):
     """The scheduled event title (or None) for each slot for a given venue"""
     return [scheduled_events()[slot] for slot in slots_by_venue(venue)]
 
+
 start_times = {
     'Start Time':
     sorted(set(
@@ -43,3 +44,7 @@ schedule = {
 programme = {**start_times, **schedule}
 
 df = pd.DataFrame.from_dict(programme)
+
+writer_orig = pd.ExcelWriter('definition/programme.xlsx', engine='xlsxwriter')
+df.to_excel(writer_orig, index=False, sheet_name='programme')
+writer_orig.save()
