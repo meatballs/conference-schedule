@@ -1,0 +1,15 @@
+Assembly Room:
+  capacity: 500
+  suitable_for: [talk, plenary]
+Ferrier Hall:
+  capacity: 200
+  suitable_for: [talk]
+Room A:
+  capacity: 80
+  suitable_for: [workshop]
+Room C:
+  capacity: 80
+  suitable_for: [talk, workshop]
+Room D:
+  capacity: 100
+  suitable_for: [talk]

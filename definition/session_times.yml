@@ -1,0 +1,50 @@
+talk:
+    morning:
+    -
+        starts_at: 10:15:00
+        duration: 30
+    -
+        starts_at: 11:15:00
+        duration: 45
+    -
+        starts_at: 12:00:00
+        duration: 30
+    afternoon:
+    -
+        starts_at: 12:30:00
+        duration: 30
+    -
+        starts_at: 14:30:00
+        duration: 30
+    -
+        starts_at: 15:00:00
+        duration: 30
+    -
+        starts_at: 15:30:00
+        duration: 30
+    evening:
+    -
+        starts_at: 16:30:00
+        duration: 30
+    -
+        starts_at: 17:00:00
+        duration: 30
+workshop:
+    None:
+    -
+        starts_at: 10:15:00
+        duration: 90
+    -
+        starts_at: 11:15:00
+        duration: 105
+    -
+        starts_at: 14:30:00
+        duration: 90
+    -
+        starts_at: 16:30:00
+        duration: 60
+plenary:
+    None:
+    -
+        starts_at: 9:10:00
+        duration: 50
