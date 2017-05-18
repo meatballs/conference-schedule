@@ -102,3 +102,4 @@ pytest.ini
 
 # Pickled conference definition
 *.bin
+*.csv

@@ -2,6 +2,7 @@
 import yaml
 import pickle
 import pulp
+import numpy as np
 import itertools as it
 from datetime import datetime, timedelta
 from conference_scheduler.resources import Slot, Event
@@ -53,30 +54,36 @@ events = {'talk': [
     for talk in talks]}
 
 speaker_unavailability = definition['speaker_unavailability']
-talk_unavailability = {talks.index(talk): [
-    slots['talk'].index(slot)
-    for period in periods
-    for slot in slots['talk']
-    if period['unavailable_from'] <= datetime.strptime(slot.starts_at, '%d-%b-%Y %H:%M') and
-    period['unavailable_until'] >= datetime.strptime(slot.starts_at, '%d-%b-%Y %H:%M') + timedelta(0, slot.duration * 60)]
-for speaker, periods in speaker_unavailability.items()
-for talk in talks if talk['speaker'] == speaker}
+talk_unavailability = {
+    talks.index(talk): [
+        slots['talk'].index(slot)
+        for period in periods
+        for slot in slots['talk']
+        if period['unavailable_from'] <= datetime.strptime(slot.starts_at, '%d-%b-%Y %H:%M') and
+        period['unavailable_until'] >= datetime.strptime(slot.starts_at, '%d-%b-%Y %H:%M') + timedelta(0, slot.duration * 60)]
+    for speaker, periods in speaker_unavailability.items()
+    for talk in talks if talk['speaker'] == speaker}
 
 for talk, unavailable_slots in talk_unavailability.items():
-    events['talk'][talk].add_unavailability(*[slots['talk'][s] for s in unavailable_slots])
+    events['talk'][talk].add_unavailability(
+        *[slots['talk'][s] for s in unavailable_slots])
 
 speaker_clashes = definition['speaker_clashes']
-talk_clashes = {talks.index(talk): [
-    talks.index(t) for s in clashing_speakers
-    for t in talks if t['speaker'] == s]
-for speaker, clashing_speakers in speaker_clashes.items()
-for talk in talks if talk['speaker'] == speaker}
+talk_clashes = {
+    talks.index(talk): [
+        talks.index(t) for s in clashing_speakers
+        for t in talks if t['speaker'] == s]
+    for speaker, clashing_speakers in speaker_clashes.items()
+    for talk in talks if talk['speaker'] == speaker}
 
 for talk, clashing_talks in talk_clashes.items():
-    events['talk'][talk].add_unavailability(*[events['talk'][t] for t in clashing_talks])
+    events['talk'][talk].add_unavailability(
+        *[events['talk'][t] for t in clashing_talks])
 
-schedule = scheduler.schedule(
+solution = scheduler.solution(
     events['talk'], slots['talk'], solver=pulp.GLPK())
+schedule_array = scheduler.solution_to_array(
+    solution, events['talk'], slots['talk'])
 
 conference = {
     'session_times': session_times,
@@ -84,8 +91,11 @@ conference = {
     'days': days,
     'slots': slots,
     'events': events,
-    'schedule': schedule
 }
 
 with open('definition/conference.bin', 'wb') as file:
     pickle.dump(conference, file)
+
+np.savetxt(
+    'definition/schedule.csv', schedule_array.astype(int), fmt='%i',
+    delimiter=',')
