@@ -1,4 +1,5 @@
 import pickle
+from datetime import datetime
 import pandas as pd
 
 with open('definition/conference.bin', 'rb') as file:
@@ -27,7 +28,11 @@ def scheduled_events_by_venue(venue):
     """The scheduled event title (or None) for each slot for a given venue"""
     return [scheduled_events()[slot] for slot in slots_by_venue(venue)]
 
-programme = {
+start_times = {
+    'Start Time':
+    sorted(set(
+        [datetime.strptime(s.starts_at, '%d-%b-%Y %H:%M') for s in slots]))}
+schedule = {
     venue: [
         events[e].name if e is not None else None
         for e in scheduled_events_by_venue(venue)]
@@ -35,6 +40,6 @@ programme = {
     if 'talk' in details['suitable_for']
 }
 
+programme = {**start_times, **schedule}
 
 df = pd.DataFrame.from_dict(programme)
-print(df.head())

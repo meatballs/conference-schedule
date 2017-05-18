@@ -2,7 +2,6 @@
 import yaml
 import pickle
 import pulp
-import numpy as np
 import itertools as it
 from datetime import datetime, timedelta
 from conference_scheduler.resources import Slot, Event
@@ -85,6 +84,7 @@ solution = scheduler.solution(
 
 conference = {
     'session_times': session_times,
+    'slot_times': slot_times,
     'venues': venues,
     'days': days,
     'slots': slots,
