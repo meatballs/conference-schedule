@@ -82,8 +82,6 @@ for talk, clashing_talks in talk_clashes.items():
 
 solution = scheduler.solution(
     events['talk'], slots['talk'], solver=pulp.GLPK())
-schedule_array = scheduler.solution_to_array(
-    solution, events['talk'], slots['talk'])
 
 conference = {
     'session_times': session_times,
@@ -91,11 +89,8 @@ conference = {
     'days': days,
     'slots': slots,
     'events': events,
+    'solution': solution
 }
 
 with open('definition/conference.bin', 'wb') as file:
     pickle.dump(conference, file)
-
-np.savetxt(
-    'definition/schedule.csv', schedule_array.astype(int), fmt='%i',
-    delimiter=',')
